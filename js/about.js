@@ -18,22 +18,6 @@ function parseTweets(runkeeper_tweets) {
 	// It works correctly, your task is to update the text of the other tags in the HTML file!
 	document.getElementById('numberTweets').innerText = num_tweets;	
 
-	// Tweet dates (1pt)
-
-		// Options to format the date string
-		const options = {
-			weekday: "long",
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-		};
-
-		// Update the earliest date
-		document.getElementById('firstDate').innerHTML = tweet_array[tweet_array.length - 1].time.toLocaleDateString("en-US", options);
-
-		// Update the latest date
-		document.getElementById('lastDate').innerHTML = tweet_array[0].time.toLocaleDateString("en-US", options);
-
 	// Tweet Categories (1pt)
 
 		// Calculate the counts and percentages
@@ -44,7 +28,20 @@ function parseTweets(runkeeper_tweets) {
 
 		let num_written = 0;
 
+		let earliest_date = tweet_array[0].time;
+		let latest_date = tweet_array[0].time;
+
 		for(const tweet of tweet_array) {
+
+			// Find the earliest and latest date
+			if(tweet.time < earliest_date) {
+				earliest_date = tweet.time;
+			}
+
+			if(tweet.time > latest_date) {
+				latest_date = tweet.time;
+			}
+
 			switch(tweet.source) {
 				case "completed_event":
 					num_completed_events++;
@@ -93,6 +90,22 @@ function parseTweets(runkeeper_tweets) {
 		document.getElementsByClassName("miscellaneous")[0].innerHTML = num_miscellaneous;
 		document.getElementsByClassName("miscellaneousPct")[0].innerHTML = percent_miscellaneous + "%";
  	
+	// Tweet dates (1pt)
+
+		// Options to format the date string
+		const options = {
+			weekday: "long",
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+		};
+
+		// Update the earliest date
+		document.getElementById('firstDate').innerHTML = tweet_array[tweet_array.length - 1].time.toLocaleDateString("en-US", options);
+
+		// Update the latest date
+		document.getElementById('lastDate').innerHTML = tweet_array[0].time.toLocaleDateString("en-US", options);
+	
 	// User-written tweets (1pt)
 	document.getElementsByClassName("completedEvents")[1].innerHTML = num_completed_events;
 	document.getElementsByClassName("written")[0].innerHTML = num_written;
