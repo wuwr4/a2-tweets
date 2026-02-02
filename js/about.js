@@ -31,6 +31,7 @@ function parseTweets(runkeeper_tweets) {
 		let earliest_date = tweet_array[0].time;
 		let latest_date = tweet_array[0].time;
 
+		// Go thru each tweet 
 		for(const tweet of tweet_array) {
 
 			// Find the earliest and latest date
