@@ -4,12 +4,15 @@ class Tweet {
     private text: string;
 	time: Date;
     weekday: boolean;
+    day: number;
 
 	constructor(tweet_text: string, tweet_time: string) {
         this.text = tweet_text;
 		this.time = new Date(tweet_time); // "ddd MMM D HH:mm:ss Z YYYY"
 
-        if(this.time.getDay() === 0 || this.time.getDay() === 6) {
+        this.day = this.time.getDay();
+
+        if(this.day === 0 || this.day === 6) {
             this.weekday = false;
         } else {
             this.weekday = true;
