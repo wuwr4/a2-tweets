@@ -29,9 +29,16 @@ function addEventHandlerForSearch() {
 	textField.addEventListener("input", (inputEvent) => {
 
 		let tweetTable = document.getElementsByClassName("table")[0];
-		
-		// Clear the previous tweets from the table
-		tweetTable.replaceChildren();
+		let numRows = tweetTable.rows.length;
+
+		// Clear the search
+		// tweetTable.replaceChildren();
+		document.getElementById("searchCount").innerHTML = 0;
+		document.getElementById("searchText").innerHTML = "";
+
+		for(let i = 1; i < numRows; i++) {
+			tweetTable.deleteRow(-1);
+		}
 
 		// Update table if search query isn't empty
 		if(inputEvent.target.value !== "") {
@@ -47,6 +54,10 @@ function addEventHandlerForSearch() {
 	
 				rowNum++;
 			}
+
+			// Update the tweet count and text
+			document.getElementById("searchCount").innerHTML = matchingTweets.length;
+			document.getElementById("searchText").innerHTML = inputEvent.target.value;
 		}
 	})
 }
@@ -55,4 +66,8 @@ function addEventHandlerForSearch() {
 document.addEventListener('DOMContentLoaded', function (event) {
 	addEventHandlerForSearch();
 	loadSavedRunkeeperTweets().then(parseTweets);
+
+	// Clear the question marks
+	document.getElementById("searchCount").innerHTML = 0;
+	document.getElementById("searchText").innerHTML = "";
 });
