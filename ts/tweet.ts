@@ -47,13 +47,13 @@ class Tweet {
         return false;
     }
 
-    // Function not used
     get writtenText(): string {
         if(!this.written) {
             return "";
         }
+
         // TODO: parse the written text from the tweet
-        return "";
+        return this.text.slice(this.text.indexOf("-") + 2);
     }
 
     get activityType(): string {
@@ -171,8 +171,27 @@ class Tweet {
         return distance;
     }
 
-    getHTMLTableRow(rowNumber:number):string {
+    getHTMLTableRow(rowNumber:number) {
         // TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        return "<tr></tr>";
+        let tweetTable = document.getElementsByClassName("table")[0];
+
+        let tableRow = document.createElement("tr");
+
+        let rowNumberCell = document.createElement("td");
+        rowNumberCell.textContent = String(rowNumber);
+
+        let activityTypeCell = document.createElement("td");
+        activityTypeCell.textContent = this.source;
+
+        let textCell = document.createElement("td");
+        textCell.textContent = this.text;
+
+        tableRow.appendChild(rowNumberCell);
+        tableRow.appendChild(activityTypeCell);
+        tableRow.appendChild(textCell);
+
+        // let row = "<tr> <td> " + rowNumber + "</td> <td> " + this.source + "</td> <td> " + this.text + "</td> </tr>";
+        // return row;
+        return tableRow;
     }
 }
