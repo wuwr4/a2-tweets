@@ -18,7 +18,7 @@ function parseTweets(runkeeper_tweets) {
 
 	// Filter for only user written tweets
 	const written_tweets = tweet_array.filter(tweet => tweet.written);
-	targetTweets = written_tweets;
+	targetTweets = written_tweets; // Allows global access to written tweets
 
 }
 
@@ -28,15 +28,14 @@ function addEventHandlerForSearch() {
 
 	textField.addEventListener("input", (inputEvent) => {
 
-		let tweetTable = document.getElementsByClassName("table")[0];
+		let tweetTable = document.getElementById("tweetTable");
 		let numRows = tweetTable.rows.length;
 
-		// Clear the search
-		// tweetTable.replaceChildren();
+		// Clear the previous search
 		document.getElementById("searchCount").innerHTML = 0;
 		document.getElementById("searchText").innerHTML = "";
 
-		for(let i = 1; i < numRows; i++) {
+		for(let i = 0; i < numRows; i++) {
 			tweetTable.deleteRow(-1);
 		}
 
@@ -50,6 +49,8 @@ function addEventHandlerForSearch() {
 			let rowNum = 1;
 			for(const tweet of matchingTweets) {
 				tweetTable.appendChild(tweet.getHTMLTableRow(rowNum));
+
+				// This works, but is much much slower
 				// tweetTable.innerHTML += tweet.getHTMLTableRow(rowNum);
 	
 				rowNum++;

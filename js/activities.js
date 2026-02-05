@@ -32,12 +32,16 @@ function parseTweets(runkeeper_tweets) {
 			continue;
 		}
 
+		// If the activity hasn't been recorded, make a new entry,
+		// else increment te existing entry
 		if(activities[activity] === undefined) {
 			activities[activity] = 1;
 		} else {
 			activities[activity]++;
 		}
 
+		// If the activity has a distance and no existing entry, make a new one,
+		// else, add the distance to the existing entry
 		if(distance != 0) {
 			if(totalDistances[activity] === undefined) {
 				totalDistances[activity] = distance;
@@ -45,6 +49,7 @@ function parseTweets(runkeeper_tweets) {
 				totalDistances[activity] += distance;
 			}
 
+			// Add to the appropriate weekday/weekend counters
 			if(tweet.weekday) {
 				timeDistribution["weekdayCount"]++;
 				timeDistribution["weekdayTotalDistance"] += distance;
@@ -137,7 +142,6 @@ function parseTweets(runkeeper_tweets) {
 
 	// Calculate the distances for each day (top 3 activities)
 	let dayDistances = [];
-	let dayAvgDistances = [];
 
 	for(const tweet of tweet_array) {
 
@@ -150,8 +154,6 @@ function parseTweets(runkeeper_tweets) {
 			dayDistances.push({activity: activityName, date: activityDate, distance: distanceCompleted});
 		}
 	}
-
-
 
 	// Convert activities[type, count] into an array of rows for VegaLite
 	const activityCountData = Object.entries(activities).map(([key, value]) => 
@@ -184,7 +186,7 @@ function parseTweets(runkeeper_tweets) {
 	  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
 	  "description": "A graph of the number of Tweets containing each type of activity.",
 	  "data": {"values": dayDistances},
-	  "mark": {"type": "bar", 
+	  "mark": {"type": "bar",
 		       "cornerRadiusEnd" : 3,
 			   "width": {"band": 0.9}
 	  		  },
@@ -213,7 +215,10 @@ function parseTweets(runkeeper_tweets) {
 	  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
 	  "description": "A graph of the number of Tweets containing each type of activity.",
 	  "data": {"values": dayDistances},
-	  "mark": "bar",
+	  "mark": {"type": "bar",
+		       "cornerRadiusEnd" : 3,
+			   "width": {"band": 0.9}
+	  		  },
 	  "encoding": {
 		"x": {"field": "date",
 			  "title": "Day of the Week",
@@ -233,11 +238,10 @@ function parseTweets(runkeeper_tweets) {
 	  }
 
 	};
-	// vegaEmbed('#distanceVisAggregated', distance_vis_aggregated_spec, {actions:false});
 
 	// Program the "Show Mean" button
 	let switchChartButton = document.getElementById("aggregate");
-	let showMean = false;
+	let showMean = false; // Start off showing totals
 
 	switchChartButton.addEventListener("click", () => {
 		if(showMean === true) {

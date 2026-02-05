@@ -10,8 +10,10 @@ class Tweet {
         this.text = tweet_text;
 		this.time = new Date(tweet_time); // "ddd MMM D HH:mm:ss Z YYYY"
 
+        // Get this event's day of the week
         this.day = this.time.getDay();
 
+        // Determine whether this event happened on a weekday or weekend
         if(this.day === 0 || this.day === 6) {
             this.weekday = false;
         } else {
@@ -61,12 +63,13 @@ class Tweet {
         let activity: string = "";
 
         // We're only looking at the activities of completed_events
-        if(this.source == 'completed_event') {
+        if(this.source === 'completed_event') {
 
             // TODO: parse the activity type from the text of the tweet
 
             // Note: [ACTIVITY] can be multiple words
-
+            
+            // Patterns 
             // #1 "Just completed a x.xx mi [ACTIVITY] with @Runkeeper"
             // #2 "Just posted a x.xx mi [ACTIVITY] with @Runkeeper"
 
@@ -133,6 +136,7 @@ class Tweet {
             }    
         }
 
+        // Some activities are entered with weird white-spacing
         return activity.trim();
     }
 
@@ -148,6 +152,7 @@ class Tweet {
 
             // Note: [ACTIVITY] can be multiple words
 
+            // Patterns
             // #1 "Just completed a x.xx mi/km [ACTIVITY] ..."
             // #2 "Just posted a x.xx mi/km [ACTIVITY] ..."
 
@@ -171,9 +176,19 @@ class Tweet {
         return distance;
     }
 
+    get link(): string {
+
+        let linkStart = this.text.indexOf("https");
+        let linkEnd = this.text.indexOf(" ", linkStart);
+
+        let linkString = this.text.slice(linkStart, linkEnd);
+
+        return linkString;
+
+    }
+
     getHTMLTableRow(rowNumber:number) {
         // TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        let tweetTable = document.getElementsByClassName("table")[0];
 
         let tableRow = document.createElement("tr");
 
@@ -181,17 +196,26 @@ class Tweet {
         rowNumberCell.textContent = String(rowNumber);
 
         let activityTypeCell = document.createElement("td");
-        activityTypeCell.textContent = this.source;
+        activityTypeCell.textContent = this.activityType;
 
         let textCell = document.createElement("td");
-        textCell.textContent = this.text;
+
+            let frontChunk = this.text.slice(0, this.text.indexOf("https"));
+            let link = this.link;
+            let backChunk = this.text.slice(this.text.indexOf(" ", this.text.indexOf("https")));
+
+            let linkTag = `<a href="${link}">${link}</a>`;
+
+        textCell.innerHTML = frontChunk + linkTag + backChunk;
 
         tableRow.appendChild(rowNumberCell);
         tableRow.appendChild(activityTypeCell);
         tableRow.appendChild(textCell);
 
+        return tableRow;
+
+        // These lines work as well, but makes the table render much, much slower
         // let row = "<tr> <td> " + rowNumber + "</td> <td> " + this.source + "</td> <td> " + this.text + "</td> </tr>";
         // return row;
-        return tableRow;
     }
 }

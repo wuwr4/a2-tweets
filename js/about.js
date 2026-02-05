@@ -12,6 +12,8 @@ function parseTweets(runkeeper_tweets) {
 		return new Tweet(tweet.text, tweet.created_at);
 	});
 
+	console.log("JELLo");
+
 	let num_tweets = tweet_array.length;
 	
 	// This line modifies the DOM, searching for the tag with the numberTweets ID and updating the text.
@@ -20,7 +22,7 @@ function parseTweets(runkeeper_tweets) {
 
 	// Tweet Categories (1pt)
 
-		// Calculate the counts and percentages
+		// Record the counts of each category
 		let num_completed_events = 0;
 		let num_live_events = 0;
 		let num_achievements = 0;
@@ -43,6 +45,7 @@ function parseTweets(runkeeper_tweets) {
 				latest_date = tweet.time;
 			}
 
+			// Count the number of times each event occurs
 			switch(tweet.source) {
 				case "completed_event":
 					num_completed_events++;
@@ -61,11 +64,13 @@ function parseTweets(runkeeper_tweets) {
 					break;
 			}
 
+			// Count the number of user-written tweets
 			if(tweet.written) {
 				num_written++;
 			}
 		}
 
+		// Calculate the percentages for each category (two decimal places)
 		const formatting = {
 			notation: "fixed",
 			precision: 2
@@ -102,10 +107,10 @@ function parseTweets(runkeeper_tweets) {
 		};
 
 		// Update the earliest date
-		document.getElementById('firstDate').innerHTML = tweet_array[tweet_array.length - 1].time.toLocaleDateString("en-US", options);
+		document.getElementById('firstDate').innerHTML = earliest_date.toLocaleDateString("en-US", options);
 
 		// Update the latest date
-		document.getElementById('lastDate').innerHTML = tweet_array[0].time.toLocaleDateString("en-US", options);
+		document.getElementById('lastDate').innerHTML = latest_date.toLocaleDateString("en-US", options);
 	
 	// User-written tweets (1pt)
 	document.getElementsByClassName("completedEvents")[1].innerHTML = num_completed_events;
@@ -117,5 +122,6 @@ function parseTweets(runkeeper_tweets) {
 document.addEventListener('DOMContentLoaded', function (event) {
 
 	// Gets the tweets, then parses it
+	console.log("HELLO")
 	loadSavedRunkeeperTweets().then(parseTweets);
 });
